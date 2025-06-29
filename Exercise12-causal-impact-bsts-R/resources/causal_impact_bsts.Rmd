@@ -1,0 +1,69 @@
+---
+title: "Exercise 12 - Solution - Causal Impact BSTS Synthetic Control"
+author: "Jonathan Hershaff"
+date: "2025-06-29"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r install-packages, echo=FALSE}
+# Import necessary library
+if (!requireNamespace("CausalImpact", quietly = TRUE)) {
+    install.packages("CausalImpact")
+}
+
+library(CausalImpact)
+library(readr)
+
+```
+
+```{r import-data}
+# Define the file path
+file_path <- "/Users/jonathan/Desktop/projects/udacity_course/lessons/lesson4_synthetic_control/data/synthetic_control_revenue_data.csv"
+
+# Read the CSV file
+revenue_data <- read_csv(file_path)
+
+# Replace spaces with underscores in column names
+colnames(revenue_data) <- gsub(" ", "_", colnames(revenue_data))
+
+# View the first few rows of the data
+print(head(revenue_data))
+
+```
+
+```{r run-causal-impact}
+
+# Prepare the data for CausalImpact
+# Extract the treated region (Region 5) and the control regions (Region 1 to Region 4, Region 6 to Region 10)
+treated_region <- revenue_data$Region_5
+control_regions <- revenue_data[, c("Region_1", "Region_2", "Region_3", "Region_4", 
+                                              "Region_6", "Region_7", "Region_8", "Region_9", "Region_10")]
+
+# Combine treated and control regions into a matrix
+impact_data <- cbind(treated_region, control_regions)
+
+# Define the pre-treatment and post-treatment periods
+pre_period <- c(1, which(revenue_data$Month == "2024-09-01"))
+post_period <- c(which(revenue_data$Month == "2024-10-01"), nrow(revenue_data))
+
+# Run the CausalImpact analysis
+impact <- CausalImpact(impact_data, pre_period, post_period)
+
+# Print the summary of the impact analysis
+summary(impact)
+
+# Plot the results
+plot(impact)
+```
+
+
+```{r print-causal-impact-report}
+
+summary(impact, "report")
+
+```

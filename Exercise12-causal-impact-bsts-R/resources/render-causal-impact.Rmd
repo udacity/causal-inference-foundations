@@ -1,0 +1,20 @@
+---
+title: "Exercise 12 - Solution - Render (save as html) Causal Impact BSTS Synthetic Control"
+author: "Jonathan Hershaff"
+date: "2025-06-29"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r render-file}
+output_file <- "/Users/jonathan/Desktop/projects/udacity_course/lessons/lesson4_synthetic_control/impact_analysis_results.html"
+library(rmarkdown)
+rmarkdown::render(input = "/Users/jonathan/Desktop/projects/udacity_course/lessons/lesson4_synthetic_control/causal_impact_bsts.Rmd", 
+                  output_file = output_file, 
+                  output_format = "html_document")
+
+```
